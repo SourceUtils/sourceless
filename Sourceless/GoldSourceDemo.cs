@@ -5,14 +5,14 @@ namespace Sourceless
 {
     public class GoldSourceDemo
     {
-        public GoldSourceDemo(DemoHeader header, SegmentDirectoryEntry[] segmentDirs)
+        public GoldSourceDemo(DemoHeader header, SegmentDirectoryEntry[] segmentDirEntries)
         {
             Header = header;
-            Segments = segmentDirs;
+            SegmentDirectoryEntries = segmentDirEntries;
         }
 
         public DemoHeader Header { get; private set; }
-        public SegmentDirectoryEntry[] Segments { get; set; }
+        public SegmentDirectoryEntry[] SegmentDirectoryEntries { get; set; }
 
         public static GoldSourceDemo FromFile(string filePath)
         {
