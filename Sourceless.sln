@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sourceless", "Sourceless\Sourceless.csproj", "{2836B8C0-E7B3-48F6-AE91-128E0E8D4CFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sourceless.AcceptanceTest", "Sourceless.AcceptanceTest\Sourceless.AcceptanceTest.csproj", "{B1185397-133C-4BD1-8B15-14A82A56E4C1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2836B8C0-E7B3-48F6-AE91-128E0E8D4CFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2836B8C0-E7B3-48F6-AE91-128E0E8D4CFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2836B8C0-E7B3-48F6-AE91-128E0E8D4CFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2836B8C0-E7B3-48F6-AE91-128E0E8D4CFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1185397-133C-4BD1-8B15-14A82A56E4C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1185397-133C-4BD1-8B15-14A82A56E4C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1185397-133C-4BD1-8B15-14A82A56E4C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1185397-133C-4BD1-8B15-14A82A56E4C1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
