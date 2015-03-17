@@ -6,26 +6,26 @@ namespace Sourceless
     {
         [FieldOrder(0)]
         [FieldLength(8)]
-        public string Magic { get; set; }
+        public string Magic { get; private set; }
 
         [FieldOrder(1)]
-        public int DemoProtocolVersion { get; set; }
+        public int DemoProtocolVersion { get; private set; }
 
         [FieldOrder(2)]
-        public int ServerProtocolVersion { get; set; }
+        public int ServerProtocolVersion { get; private set; }
 
         [FieldOrder(3)]
         [FieldLength(128)]
-        public string MapName { get; set; }
+        public string MapName { get; private set; }
 
         [FieldOrder(4)]
         [FieldLength(128)]
-        public string GameDllName { get; set; }
+        public string GameDllName { get; private set; }
 
         [FieldOrder(5)]
-        public uint MapCrc { get; set; }
+        public uint MapCrc { get; private set; }
 
         [FieldOrder(6)]
-        public int SegmentDirectoryOffset { get; set; }
+        public int SegmentDirectoryOffset { get; private set; }
     }
 }

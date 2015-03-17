@@ -6,28 +6,28 @@ namespace Sourceless
     public class SegmentDirectoryEntry
     {
         [FieldOrder(0)]
-        public int Number { get; set; }
+        public int Number { get; private set; }
 
         [FieldOrder(1)]
         [FieldLength(64)]
-        public string Title { get; set; }
+        public string Title { get; private set; }
 
         [FieldOrder(2)]
-        public int Flags { get; set; }
+        public int Flags { get; private set; }
 
         [FieldOrder(3)]
-        public int CdTrack { get; set; }
+        public int CdTrack { get; private set; }
 
         [FieldOrder(4)]
-        public float Time { get; set; }
+        public float Time { get; private set; }
 
         [FieldOrder(5)]
-        public int Frames { get; set; }
+        public int Frames { get; private set; }
 
         [FieldOrder(6)]
-        public int Offset { get; set; }
+        public int Offset { get; private set; }
 
         [FieldOrder(7)]
-        public int Length { get; set; }
+        public int Length { get; private set; }
     }
 }
