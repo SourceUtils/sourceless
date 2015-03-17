@@ -16,7 +16,7 @@ namespace Sourceless.AcceptanceTest
             Assert.Equal("boot_camp", header.MapName);
             Assert.Equal("valve", header.GameDllName);
             Assert.Equal(0x84369235, header.MapCrc);
-            Assert.Equal(0x4E007, header.DirectoryOffset);
+            Assert.Equal(0x4E007, header.SegmentDirectoryOffset);
         }
     }
 }

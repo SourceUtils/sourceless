@@ -26,6 +26,6 @@ namespace Sourceless
         public uint MapCrc { get; set; }
 
         [FieldOrder(6)]
-        public int DirectoryOffset { get; set; }
+        public int SegmentDirectoryOffset { get; set; }
     }
 }
