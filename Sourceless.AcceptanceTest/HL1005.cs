@@ -2,10 +2,10 @@
 
 namespace Sourceless.AcceptanceTest
 {
-    public class FirstAcceptance
+    public class HL1005
     {
         [Fact]
-        public void ReadDemoHeader()
+        public void ReadsDemoHeader()
         {
             var demo = GoldSourceDemo.FromFile("Demos\\HL1005.dem");
             var header = demo.Header;
