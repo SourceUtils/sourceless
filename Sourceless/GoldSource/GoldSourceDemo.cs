@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using BinarySerialization;
 
-namespace Sourceless
+namespace Sourceless.GoldSource
 {
     public class GoldSourceDemo
     {

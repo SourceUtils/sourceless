@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
 using BinarySerialization;
 
-namespace Sourceless
+namespace Sourceless.GoldSource
 {
     public class SegmentDirectoryEntry
     {

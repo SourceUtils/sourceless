@@ -1,8 +1,9 @@
-﻿using Xunit;
+﻿using Sourceless.GoldSource;
+using Xunit;
 
 namespace Sourceless.AcceptanceTest
 {
-    public class AcceptanceTest
+    public class GoldSourceAcceptanceTest
     {
         [Fact]
         public void ReadHL1005Demo()

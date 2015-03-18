@@ -43,11 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoHeader.cs" />
-    <Compile Include="GoldSourceDemo.cs" />
+    <Compile Include="GoldSource\DemoHeader.cs" />
+    <Compile Include="GoldSource\GoldSourceDemo.cs" />
+    <Compile Include="GoldSource\SegmentDirectory.cs" />
+    <Compile Include="GoldSource\SegmentDirectoryEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SegmentDirectory.cs" />
-    <Compile Include="SegmentDirectoryEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
