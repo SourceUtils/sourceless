@@ -17,7 +17,7 @@ namespace Sourceless
         public static GoldSourceDemo FromFile(string filePath)
         {
             var serializer = new BinarySerializer();
-            var demoStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            var demoStream = new FileStream(filePath, FileMode.Open);
 
             var demoHeader = serializer.Deserialize<DemoHeader>(demoStream);
 

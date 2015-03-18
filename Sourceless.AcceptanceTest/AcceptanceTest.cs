@@ -2,14 +2,14 @@
 
 namespace Sourceless.AcceptanceTest
 {
-    public class HL1005
+    public class AcceptanceTest
     {
         [Fact]
-        public void ReadsDemoHeader()
+        public void ReadHL1005Demo()
         {
             var demo = GoldSourceDemo.FromFile("Demos\\HL1005.dem");
-            var header = demo.Header;
 
+            var header = demo.Header;
             Assert.Equal("HLDEMO", header.Magic);
             Assert.Equal(4, header.DemoProtocolVersion);
             Assert.Equal(35, header.ServerProtocolVersion);
@@ -17,14 +17,8 @@ namespace Sourceless.AcceptanceTest
             Assert.Equal("valve", header.GameDllName);
             Assert.Equal(0x84369235, header.MapCrc);
             Assert.Equal(0x4E007, header.SegmentDirectoryOffset);
-        }
 
-        [Fact]
-        public void ReadsSegmentDirectoryEntries()
-        {
-            var demo = GoldSourceDemo.FromFile("Demos\\HL1005.dem");
             var segmentDirEntries = demo.SegmentDirectoryEntries;
-
             Assert.Equal(2, segmentDirEntries.Length);
 
             Assert.Equal(0, segmentDirEntries[0].Number);
