@@ -1,6 +1,6 @@
 ﻿using BinarySerialization;
 
-namespace Sourceless.GoldSource
+namespace Sourceless.GoldSource.Demo.Message
 {
     public class DemoMessageHeader
     {

@@ -1,6 +1,6 @@
 ﻿using BinarySerialization;
 
-namespace Sourceless.GoldSource
+namespace Sourceless.GoldSource.Demo.Message
 {
     /// <summary>
     ///     A packet stored directly off the network stream.

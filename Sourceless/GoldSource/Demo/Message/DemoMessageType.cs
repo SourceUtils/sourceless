@@ -1,4 +1,4 @@
-﻿namespace Sourceless.GoldSource
+﻿namespace Sourceless.GoldSource.Demo.Message
 {
     public enum DemoMessageType
     {

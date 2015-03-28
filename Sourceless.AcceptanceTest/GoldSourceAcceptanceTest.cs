@@ -1,4 +1,5 @@
-﻿using Sourceless.GoldSource;
+﻿using Sourceless.GoldSource.Demo;
+using Sourceless.GoldSource.Demo.Message;
 using Xunit;
 
 namespace Sourceless.AcceptanceTest

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BinarySerialization;
+using Sourceless.GoldSource.Demo.Message;
 
-namespace Sourceless.GoldSource
+namespace Sourceless.GoldSource.Demo
 {
     public class GoldSourceDemo
     {
