@@ -44,7 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GoldSource\DemoHeader.cs" />
+    <Compile Include="GoldSource\DemoMessage.cs" />
+    <Compile Include="GoldSource\DemoMessageHeader.cs" />
+    <Compile Include="GoldSource\DemoMessageType.cs" />
     <Compile Include="GoldSource\GoldSourceDemo.cs" />
+    <Compile Include="GoldSource\NetworkPacketDemoMessage.cs" />
     <Compile Include="GoldSource\SegmentDirectory.cs" />
     <Compile Include="GoldSource\SegmentDirectoryEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
