@@ -12,6 +12,7 @@ namespace Sourceless.GoldSource.Demo
         public delegate void SyncTickMessageHandler(object sender, SyncTickEventArgs e);
         public delegate void SequenceInfoMessageHandler(object sender, SequenceInfoEventArgs e);
         public delegate void FrameCompleteMessageHandler(object sender, FrameCompleteEventArgs e);
+        public delegate void ClientCommandMessageHandler(object sender, ClientCommandEventArgs e);
         public delegate void ClientDataMessageHandler(object sender, ClientDataEventArgs e);
         public delegate void SegmentEndMessageHandler(object sender, SegmentEndEventArgs e);
 
@@ -29,6 +30,7 @@ namespace Sourceless.GoldSource.Demo
         public event SyncTickMessageHandler OnSyncTickMessage;
         public event SequenceInfoMessageHandler OnSequenceInfoMessage;
         public event FrameCompleteMessageHandler OnFrameCompleteMessage;
+        public event ClientCommandMessageHandler OnClientCommandMessage;
         public event ClientDataMessageHandler OnClientDataMessage;
         public event SegmentEndMessageHandler OnSegmentEndMessage;
 
@@ -74,6 +76,9 @@ namespace Sourceless.GoldSource.Demo
                         break;
                     case DemoMessage.FrameComplete:
                         ProcessFrameCompleteMessage(messageHeader);
+                        break;
+                    case DemoMessage.ClientCommand:
+                        ProcessClientCommandMessage(curSegment, messageHeader);
                         break;
                     case DemoMessage.ClientData:
                         ProcessClientDataMessage(curSegment, messageHeader);
@@ -133,6 +138,17 @@ namespace Sourceless.GoldSource.Demo
             };
             OnFrameCompleteMessage.Invoke(this, args);
         }
+
+        private void ProcessClientCommandMessage(Stream segmentStream, DemoMessageHeader messageHeader)
+        {
+            var demoMessage = ClientCommandDemoMessage.Read(segmentStream);
+            var args = new ClientCommandEventArgs
+            {
+                Message = demoMessage,
+                Header = messageHeader
+            };
+            OnClientCommandMessage.Invoke(this, args);
+        }
         
         private void ProcessClientDataMessage(Stream segmentStream, DemoMessageHeader messageHeader)
         {
@@ -174,6 +190,11 @@ namespace Sourceless.GoldSource.Demo
         public class FrameCompleteEventArgs : EventArgs
         {
             public DemoMessageHeader Header { get; set; }
+        } 
+        public class ClientCommandEventArgs : EventArgs
+        {
+            public DemoMessageHeader Header { get; set; }
+            public ClientCommandDemoMessage Message { get; set; }
         } 
         
         public class ClientDataEventArgs : EventArgs

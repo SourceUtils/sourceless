@@ -7,6 +7,7 @@
         SyncTick = 2,
         SequenceInfo = 3,
         FrameComplete = 4,
+        ClientCommand = 5,
         ClientData = 6,
         SegmentEnd = 8
     }

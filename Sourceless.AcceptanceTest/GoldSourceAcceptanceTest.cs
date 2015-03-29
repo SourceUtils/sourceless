@@ -18,7 +18,7 @@ namespace Sourceless.AcceptanceTest
             Assert.Equal("boot_camp", header.MapName);
             Assert.Equal("valve", header.GameDllName);
             Assert.Equal(0x84369235, header.MapCrc);
-            Assert.Equal(0x4E007, header.SegmentDirectoryOffset);
+            Assert.Equal(0x87DFA, header.SegmentDirectoryOffset);
 
             var segmentDirEntries = demo.SegmentDirectoryEntries;
             Assert.Equal(2, segmentDirEntries.Length);
@@ -36,14 +36,14 @@ namespace Sourceless.AcceptanceTest
             Assert.Equal("Playback", segmentDirEntries[1].Title);
             Assert.Equal(0, segmentDirEntries[1].Flags);
             Assert.Equal(-1, segmentDirEntries[1].CdTrack);
-            Assert.InRange(segmentDirEntries[1].Time, 11.378293, 11.378294);
-            Assert.Equal(814, segmentDirEntries[1].Frames);
+            Assert.InRange(segmentDirEntries[1].Time, 25.464447, 25.464448);
+            Assert.Equal(1317, segmentDirEntries[1].Frames);
             Assert.Equal(0x6204, segmentDirEntries[1].Offset);
-            Assert.Equal(0x47E03, segmentDirEntries[1].Length);
+            Assert.Equal(0x81BF6, segmentDirEntries[1].Length);
 
             Assert.Equal(2, demo.Segments.Count);
             Assert.Equal(0x60EC, demo.Segments[0].Length);
-            Assert.Equal(0x47E03, demo.Segments[1].Length);
+            Assert.Equal(0x81BF6, demo.Segments[1].Length);
 
             var networkPacketCount = 0;
             demo.OnNetworkPacketMessage += (sender, msg) =>
@@ -53,8 +53,8 @@ namespace Sourceless.AcceptanceTest
                 if (networkPacketCount == 1)
                 {
                     Assert.Equal(DemoMessage.NetworkPacket0, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, 0.360358, 0.360359);
-                    Assert.Equal(7, msg.Header.Frame);
+                    Assert.InRange(msg.Header.Time, 0.309847, 0.309848);
+                    Assert.Equal(6, msg.Header.Frame);
                     Assert.Equal(0, msg.Message.ViewAngleX);
                     Assert.Equal(0, msg.Message.OriginX);
                     Assert.Equal(0, msg.Message.ViewAngleY);
@@ -71,8 +71,8 @@ namespace Sourceless.AcceptanceTest
                 else if (networkPacketCount == 2)
                 {
                     Assert.Equal(DemoMessage.NetworkPacket0, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, 0.374247, 0.374248);
-                    Assert.Equal(8, msg.Header.Frame);
+                    Assert.InRange(msg.Header.Time, 0.323738, 0.323739);
+                    Assert.Equal(7, msg.Header.Frame);
                     Assert.Equal(0, msg.Message.ViewAngleX);
                     Assert.Equal(0, msg.Message.OriginX);
                     Assert.Equal(0, msg.Message.ViewAngleY);
@@ -89,18 +89,18 @@ namespace Sourceless.AcceptanceTest
                 else if (networkPacketCount == 9) // Special packet with id = 1 (don't know exactly what it means yet)
                 {
                     Assert.Equal(DemoMessage.NetworkPacket1, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, -0.000000282, -0.000000281);
+                    Assert.InRange(msg.Header.Time, -0.000001350, -0.000001349);
                     Assert.Equal(0, msg.Header.Frame);
-                    Assert.InRange(msg.Message.ViewAngleX, -13.13123, -13.13122);
-                    Assert.Equal(1777.375, msg.Message.OriginX);
-                    Assert.InRange(msg.Message.ViewAngleY, 154.8907, 154.8908);
-                    Assert.Equal(428.25, msg.Message.OriginY);
+                    Assert.InRange(msg.Message.ViewAngleX, -31.81200, -31.81199);
+                    Assert.Equal(843.125, msg.Message.OriginX);
+                    Assert.InRange(msg.Message.ViewAngleY, 186.86781, 186.86782);
+                    Assert.Equal(-16, msg.Message.OriginY);
                     Assert.Equal(0, msg.Message.ViewAngleZ);
-                    Assert.Equal(36, msg.Message.OriginZ);
-                    Assert.Equal(547, msg.Message.Length);
-                    Assert.Equal(547, msg.Message.Data.Length);
-                    Assert.Equal(0x7A, msg.Message.Data[0]);
-                    Assert.Equal(0x03, msg.Message.Data[1]);
+                    Assert.Equal(-29.5, msg.Message.OriginZ);
+                    Assert.Equal(704, msg.Message.Length);
+                    Assert.Equal(704, msg.Message.Data.Length);
+                    Assert.Equal(0xDB, msg.Message.Data[0]);
+                    Assert.Equal(0x16, msg.Message.Data[1]);
                     Assert.Equal(0x00, msg.Message.Data[2]);
                     Assert.Equal(0x80, msg.Message.Data[3]);
                 }
@@ -114,8 +114,8 @@ namespace Sourceless.AcceptanceTest
                 if (segmentEndCount == 1)
                 {
                     Assert.Equal(DemoMessage.SegmentEnd, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, 12.879183, 12.879184);
-                    Assert.Equal(894, msg.Header.Frame);
+                    Assert.InRange(msg.Header.Time, 81.791069, 81.791070);
+                    Assert.Equal(5854, msg.Header.Frame);
                 }
             };
 
@@ -127,7 +127,7 @@ namespace Sourceless.AcceptanceTest
                 if (syncTickCount == 1)
                 {
                     Assert.Equal(DemoMessage.SyncTick, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, -0.000000282, -0.000000281);
+                    Assert.InRange(msg.Header.Time, -0.000001350, -0.000001349);
                     Assert.Equal(0, msg.Header.Frame);
                 }
             };
@@ -140,16 +140,16 @@ namespace Sourceless.AcceptanceTest
                 if (clientDataCount == 1)
                 {
                     Assert.Equal(DemoMessage.ClientData, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, -0.000000282, -0.000000281);
+                    Assert.InRange(msg.Header.Time, -0.000001350, -0.000001349);
                     Assert.Equal(0, msg.Header.Frame);
 
-                    Assert.Equal(1777.375, msg.Message.Origin.X);
-                    Assert.Equal(428.25, msg.Message.Origin.Y);
-                    Assert.Equal(36, msg.Message.Origin.Z);
+                    Assert.Equal(843.125, msg.Message.Origin.X);
+                    Assert.Equal(-16, msg.Message.Origin.Y);
+                    Assert.Equal(-29.5, msg.Message.Origin.Z);
                     Assert.Equal(28, msg.Message.ViewHeight);
                     Assert.Equal(0, msg.Message.MaxSpeed);
-                    Assert.InRange(msg.Message.ViewAngles.X, -13.13123, -13.13122);
-                    Assert.InRange(msg.Message.ViewAngles.Y, 154.8907, 154.8908);
+                    Assert.InRange(msg.Message.ViewAngles.X, 8.514001, 8.514002);
+                    Assert.InRange(msg.Message.ViewAngles.Y, 106.215820, 106.215821);
                     Assert.Equal(0, msg.Message.ViewAngles.Z);
                     Assert.Equal(0, msg.Message.PunchAngles.X);
                     Assert.Equal(0, msg.Message.PunchAngles.Y);
@@ -168,16 +168,16 @@ namespace Sourceless.AcceptanceTest
                 if (sequenceInfoCount == 1)
                 {
                     Assert.Equal(DemoMessage.SequenceInfo, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, -0.000000282, -0.000000281);
+                    Assert.InRange(msg.Header.Time, -0.000001350, -0.000001349);
                     Assert.Equal(0, msg.Header.Frame);
 
-                    Assert.Equal(890, msg.Message.IncomingSequence);
-                    Assert.Equal(890, msg.Message.IncomingAcknowledged);
+                    Assert.Equal(5851, msg.Message.IncomingSequence);
+                    Assert.Equal(5851, msg.Message.IncomingAcknowledged);
                     Assert.Equal(0, msg.Message.IncomingReliableAcknowledged);
-                    Assert.Equal(0, msg.Message.IncomingReliableSequence);
-                    Assert.Equal(891, msg.Message.OutgoingSequence);
+                    Assert.Equal(1, msg.Message.IncomingReliableSequence);
+                    Assert.Equal(5852, msg.Message.OutgoingSequence);
                     Assert.Equal(0, msg.Message.ReliableSequence);
-                    Assert.Equal(11, msg.Message.LastReliableSequence);
+                    Assert.Equal(5324, msg.Message.LastReliableSequence);
                 }
             };
 
@@ -189,18 +189,40 @@ namespace Sourceless.AcceptanceTest
                 if (frameCompleteCount == 1)
                 {
                     Assert.Equal(DemoMessage.FrameComplete, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, -0.000000282, -0.000000281);
+                    Assert.InRange(msg.Header.Time, -0.000001350, -0.000001349);
                     Assert.Equal(0, msg.Header.Frame);
                 }
             };
 
+            var clientCommandCount = 0;
+            demo.OnClientCommandMessage += (sender, msg) =>
+            {
+                clientCommandCount++;
+
+                if (clientCommandCount == 1)
+                {
+                    Assert.Equal(DemoMessage.ClientCommand, msg.Header.Type);
+                    Assert.InRange(msg.Header.Time, 6.690042, 6.690043);
+                    Assert.Equal(1, msg.Header.Frame);
+                    Assert.Equal("-showscores", msg.Message.Command);
+                }
+                if (clientCommandCount == 2)
+                {
+                    Assert.Equal(DemoMessage.ClientCommand, msg.Header.Type);
+                    Assert.InRange(msg.Header.Time, 7.758872, 7.758873);
+                    Assert.Equal(49, msg.Header.Frame);
+                    Assert.Equal("-showscores", msg.Message.Command);
+                }
+            };
+
             demo.Read();
-            Assert.True(networkPacketCount >= 9);
-            Assert.True(segmentEndCount >= 1);
-            Assert.True(syncTickCount >= 1);
-            Assert.True(clientDataCount >= 1);
-            Assert.True(sequenceInfoCount >= 1);
-            Assert.True(frameCompleteCount >= 1);
+            Assert.Equal(1325, networkPacketCount);
+            Assert.Equal(2, segmentEndCount);
+            Assert.Equal(1, syncTickCount);
+            Assert.Equal(1317, clientDataCount);
+            Assert.Equal(1317, sequenceInfoCount);
+            Assert.Equal(1317, frameCompleteCount);
+            Assert.Equal(2, clientCommandCount);
         }
     }
 }
