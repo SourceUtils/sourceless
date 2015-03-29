@@ -101,9 +101,23 @@ namespace Sourceless.AcceptanceTest
                 }
             };
 
+            var syncTickCount = 0;
+            demo.OnSyncTickMessage += (sender, msg) =>
+            {
+                syncTickCount++;
+
+                if (syncTickCount == 1)
+                {
+                    Assert.Equal(DemoMessage.SyncTick, msg.Header.Type);
+                    Assert.InRange(msg.Header.Time, -0.000000282, -0.000000281);
+                    Assert.Equal(0, msg.Header.Frame);
+                }
+            };
+
             demo.Read();
             Assert.True(networkPacketCount >= 2);
             Assert.True(segmentEndCount >= 1);
+            Assert.True(syncTickCount >= 1);
         }
     }
 }

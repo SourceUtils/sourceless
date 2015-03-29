@@ -10,6 +10,7 @@ namespace Sourceless.GoldSource.Demo
     {
         public delegate void NetworkPacketMessageHandler(object sender, NetworkPacketEventArgs e);
         public delegate void SegmentEndMessageHandler(object sender, SegmentEndEventArgs e);
+        public delegate void SyncTickMessageHandler(object sender, SyncTickEventArgs e);
 
         public GoldSourceDemo(DemoHeader header, SegmentDirectoryEntry[] segmentDirEntries, List<byte[]> segments)
         {
@@ -22,6 +23,7 @@ namespace Sourceless.GoldSource.Demo
         public SegmentDirectoryEntry[] SegmentDirectoryEntries { get; set; }
         public List<byte[]> Segments { get; private set; }
         public event NetworkPacketMessageHandler OnNetworkPacketMessage;
+        public event SyncTickMessageHandler OnSyncTickMessage;
         public event SegmentEndMessageHandler OnSegmentEndMessage;
 
         public static GoldSourceDemo FromFile(string filePath)
@@ -57,6 +59,9 @@ namespace Sourceless.GoldSource.Demo
                     case DemoMessage.NetworkPacket:
                         ProcessNetworkPacketMessage(curSegment, messageHeader);
                         break;
+                    case DemoMessage.SyncTick:
+                        ProcessSyncTickMessage(messageHeader);
+                        break;
                     case DemoMessage.SegmentEnd:
                         ProcessSegmentEndMessage(messageHeader);
                         curSegment.Close();
@@ -77,27 +82,41 @@ namespace Sourceless.GoldSource.Demo
         {
             var demoMessage = NetworkPacketDemoMessage.Read(segmentStream);
 
-            var packetArgs = new NetworkPacketEventArgs
+            var args = new NetworkPacketEventArgs
             {
                 Header = messageHeader,
                 Message = demoMessage
             };
-            OnNetworkPacketMessage.Invoke(this, packetArgs);
+            OnNetworkPacketMessage.Invoke(this, args);
+        }
+
+        private void ProcessSyncTickMessage(DemoMessageHeader messageHeader)
+        {
+            var args = new SyncTickEventArgs
+            {
+                Header = messageHeader
+            };
+            OnSyncTickMessage.Invoke(this, args);
         }
 
         private void ProcessSegmentEndMessage(DemoMessageHeader messageHeader)
         {
-            var endArgs = new SegmentEndEventArgs
+            var args = new SegmentEndEventArgs
             {
                 Header = messageHeader
             };
-            OnSegmentEndMessage.Invoke(this, endArgs);
+            OnSegmentEndMessage.Invoke(this, args);
         }
 
         public class NetworkPacketEventArgs : EventArgs
         {
             public DemoMessageHeader Header { get; set; }
             public NetworkPacketDemoMessage Message { get; set; }
+        }
+
+        public class SyncTickEventArgs : EventArgs
+        {
+            public DemoMessageHeader Header { get; set; }
         }
 
         public class SegmentEndEventArgs : EventArgs
