@@ -1,5 +1,4 @@
-﻿using System;
-using Sourceless.GoldSource.Demo;
+﻿using Sourceless.GoldSource.Demo;
 using Sourceless.GoldSource.Demo.Message;
 using Xunit;
 
