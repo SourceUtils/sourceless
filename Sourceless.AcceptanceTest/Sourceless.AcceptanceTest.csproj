@@ -64,7 +64,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="GoldSourceAcceptanceTest.cs" />
+    <Compile Include="GoldSource\ReadHL1005DemoTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -74,11 +74,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Demos\HL1005.dem">
+    <None Include="GoldSource\Demos\HL1005.dem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

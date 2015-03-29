@@ -3,14 +3,14 @@ using Sourceless.GoldSource.Demo;
 using Sourceless.GoldSource.Demo.Message;
 using Xunit;
 
-namespace Sourceless.AcceptanceTest
+namespace Sourceless.AcceptanceTest.GoldSource
 {
-    public class GoldSourceAcceptanceTest
+    public class ReadHL1005DemoTest
     {
         [Fact]
         public void ReadHL1005Demo()
         {
-            var demo = GoldSourceDemo.FromFile("Demos\\HL1005.dem");
+            var demo = GoldSourceDemo.FromFile("GoldSource\\Demos\\HL1005.dem");
 
             AssertDemoHeaderIsReadCorrectly(demo);
             AssertSegmentDirectoryIsReadCorrectly(demo);
