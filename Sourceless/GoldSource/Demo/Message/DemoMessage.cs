@@ -6,6 +6,7 @@
         NetworkPacket1 = 1,
         SyncTick = 2,
         SequenceInfo = 3,
+        FrameComplete = 4,
         ClientData = 6,
         SegmentEnd = 8
     }
