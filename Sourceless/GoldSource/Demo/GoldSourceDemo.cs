@@ -51,14 +51,28 @@ namespace Sourceless.GoldSource.Demo
         {
             var segmentStream = new MemoryStream(Segments[0]);
             var serializer = new BinarySerializer();
-            var demoMessage = serializer.Deserialize<NetworkPacketDemoMessage>(segmentStream);
 
-            var eventArgs = new NetworkPacketEventArgs
+            while (true)
             {
-                Header = demoMessage.Header,
-                Message = demoMessage
-            };
-            OnNetworkPacketMessage.Invoke(this, eventArgs);
+                var messageHeader = serializer.Deserialize<DemoMessageHeader>(segmentStream);
+
+                if (messageHeader.Type == DemoMessage.NetworkPacket)
+                {
+                    var demoMessage = serializer.Deserialize<NetworkPacketDemoMessage>(segmentStream);
+
+                    var eventArgs = new NetworkPacketEventArgs
+                    {
+                        Header = messageHeader,
+                        Message = demoMessage
+                    };
+                    OnNetworkPacketMessage.Invoke(this, eventArgs);
+                }
+                else
+                {
+                    segmentStream.Close();
+                    break;
+                }
+            }
         }
 
         public class NetworkPacketEventArgs : EventArgs

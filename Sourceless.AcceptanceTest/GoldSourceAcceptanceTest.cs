@@ -45,28 +45,50 @@ namespace Sourceless.AcceptanceTest
             Assert.Equal(0x60EC, demo.Segments[0].Length);
             Assert.Equal(0x47E03, demo.Segments[1].Length);
 
-            var called = false;
+            var callCount = 0;
             demo.OnNetworkPacketMessage += (sender, msg) =>
             {
-                called = true;
-                Assert.Equal((int)DemoMessageType.NetworkPacket, msg.Header.Type);
-                Assert.InRange(msg.Header.Time, 0.360358, 0.360359);
-                Assert.Equal(7, msg.Header.Frame);
-                Assert.Equal(0, msg.Message.Unk1);
-                Assert.Equal(0, msg.Message.Unk2);
-                Assert.Equal(0, msg.Message.Unk3);
-                Assert.Equal(0, msg.Message.Unk4);
-                Assert.Equal(0, msg.Message.Unk5);
-                Assert.Equal(0, msg.Message.Unk6);
-                Assert.Equal(175, msg.Message.Length);
-                Assert.Equal(175, msg.Message.Data.Length);
-                Assert.Equal(0x03, msg.Message.Data[0]);
-                Assert.Equal(0x00, msg.Message.Data[1]);
-                Assert.Equal(0x00, msg.Message.Data[2]);
-                Assert.Equal(0x80, msg.Message.Data[3]);
+                callCount++;
+
+                if (callCount == 1)
+                {
+                    Assert.Equal(DemoMessage.NetworkPacket, msg.Header.Type);
+                    Assert.InRange(msg.Header.Time, 0.360358, 0.360359);
+                    Assert.Equal(7, msg.Header.Frame);
+                    Assert.Equal(0, msg.Message.Unk1);
+                    Assert.Equal(0, msg.Message.Unk2);
+                    Assert.Equal(0, msg.Message.Unk3);
+                    Assert.Equal(0, msg.Message.Unk4);
+                    Assert.Equal(0, msg.Message.Unk5);
+                    Assert.Equal(0, msg.Message.Unk6);
+                    Assert.Equal(175, msg.Message.Length);
+                    Assert.Equal(175, msg.Message.Data.Length);
+                    Assert.Equal(0x03, msg.Message.Data[0]);
+                    Assert.Equal(0x00, msg.Message.Data[1]);
+                    Assert.Equal(0x00, msg.Message.Data[2]);
+                    Assert.Equal(0x80, msg.Message.Data[3]);
+                }
+                else if (callCount == 2)
+                {
+                    Assert.Equal(DemoMessage.NetworkPacket, msg.Header.Type);
+                    Assert.InRange(msg.Header.Time, 0.374247, 0.374248);
+                    Assert.Equal(8, msg.Header.Frame);
+                    Assert.Equal(0, msg.Message.Unk1);
+                    Assert.Equal(0, msg.Message.Unk2);
+                    Assert.Equal(0, msg.Message.Unk3);
+                    Assert.Equal(0, msg.Message.Unk4);
+                    Assert.Equal(0, msg.Message.Unk5);
+                    Assert.Equal(0, msg.Message.Unk6);
+                    Assert.Equal(7046, msg.Message.Length);
+                    Assert.Equal(7046, msg.Message.Data.Length);
+                    Assert.Equal(0x04, msg.Message.Data[0]);
+                    Assert.Equal(0x00, msg.Message.Data[1]);
+                    Assert.Equal(0x00, msg.Message.Data[2]);
+                    Assert.Equal(0x80, msg.Message.Data[3]);
+                }
             };
             demo.Read();
-            Assert.True(called);
+            Assert.True(callCount >= 2);
         }
     }
 }

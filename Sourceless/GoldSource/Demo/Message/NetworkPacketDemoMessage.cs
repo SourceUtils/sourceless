@@ -5,7 +5,7 @@ namespace Sourceless.GoldSource.Demo.Message
     /// <summary>
     ///     A packet stored directly off the network stream.
     /// </summary>
-    public class NetworkPacketDemoMessage : DemoMessage
+    public class NetworkPacketDemoMessage
     {
         [FieldOrder(0)]
         public float Unk1 { get; private set; }

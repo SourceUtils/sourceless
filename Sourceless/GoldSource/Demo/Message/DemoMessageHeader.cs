@@ -5,7 +5,7 @@ namespace Sourceless.GoldSource.Demo.Message
     public class DemoMessageHeader
     {
         [FieldOrder(0)]
-        public byte Type { get; private set; }
+        public DemoMessage Type { get; private set; }
 
         [FieldOrder(1)]
         public float Time { get; private set; }

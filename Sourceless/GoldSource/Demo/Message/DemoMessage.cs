@@ -1,10 +1,7 @@
-﻿using BinarySerialization;
-
-namespace Sourceless.GoldSource.Demo.Message
+﻿namespace Sourceless.GoldSource.Demo.Message
 {
-    public class DemoMessage
+    public enum DemoMessage : byte
     {
-        [FieldOrder(0)]
-        public DemoMessageHeader Header { get; private set; }
+        NetworkPacket = 0
     }
 }
