@@ -1,4 +1,5 @@
-﻿using Sourceless.GoldSource.Demo;
+﻿using System.Collections.Generic;
+using Sourceless.GoldSource.Demo;
 using Sourceless.GoldSource.Demo.Message;
 using Xunit;
 
@@ -11,6 +12,44 @@ namespace Sourceless.AcceptanceTest
         {
             var demo = GoldSourceDemo.FromFile("Demos\\HL1005.dem");
 
+            AssertDemoHeaderIsReadCorrectly(demo);
+            AssertSegmentDirectoryIsReadCorrectly(demo);
+            AssertSegmentsAreReadCorrectly(demo);
+
+            var networkPacketMessages = new List<GoldSourceDemo.NetworkPacketEventArgs>();
+            demo.OnNetworkPacketMessage += (sender, msg) => { networkPacketMessages.Add(msg); };
+
+            var segmentEndMessages = new List<GoldSourceDemo.SegmentEndEventArgs>();
+            demo.OnSegmentEndMessage += (sender, msg) => { segmentEndMessages.Add(msg); };
+
+            var syncTickMessages = new List<GoldSourceDemo.SyncTickEventArgs>();
+            demo.OnSyncTickMessage += (sender, msg) => { syncTickMessages.Add(msg); };
+
+            var clientDataMessages = new List<GoldSourceDemo.ClientDataEventArgs>();
+            demo.OnClientDataMessage += (sender, msg) => { clientDataMessages.Add(msg); };
+
+            var sequenceInfoMessages = new List<GoldSourceDemo.SequenceInfoEventArgs>();
+            demo.OnSequenceInfoMessage += (sender, msg) => { sequenceInfoMessages.Add(msg); };
+
+            var frameCompleteMessages = new List<GoldSourceDemo.FrameCompleteEventArgs>();
+            demo.OnFrameCompleteMessage += (sender, msg) => { frameCompleteMessages.Add(msg); };
+
+            var clientCommandMessages = new List<GoldSourceDemo.ClientCommandEventArgs>();
+            demo.OnClientCommandMessage += (sender, msg) => { clientCommandMessages.Add(msg); };
+
+            demo.Read();
+
+            AssertNetworkPacketMessagesAreReadCorrectly(networkPacketMessages);
+            AssertSegmentEndMessagesAreReadCorrectly(segmentEndMessages);
+            AssertSyncTickMessagesAreReadCorrectly(syncTickMessages);
+            AssertClientDataMessagesAreReadCorrectly(clientDataMessages);
+            AssertSequenceInfoMessagesAreReadCorrectly(sequenceInfoMessages);
+            AssertFrameCompleteMessagesAreReadCorrectly(frameCompleteMessages);
+            AssertClientCommandMessagesAreReadCorrectly(clientCommandMessages);
+        }
+
+        private static void AssertDemoHeaderIsReadCorrectly(GoldSourceDemo demo)
+        {
             var header = demo.Header;
             Assert.Equal("HLDEMO", header.Magic);
             Assert.Equal(4, header.DemoProtocolVersion);
@@ -19,7 +58,10 @@ namespace Sourceless.AcceptanceTest
             Assert.Equal("valve", header.GameDllName);
             Assert.Equal(0x84369235, header.MapCrc);
             Assert.Equal(0x87DFA, header.SegmentDirectoryOffset);
+        }
 
+        private static void AssertSegmentDirectoryIsReadCorrectly(GoldSourceDemo demo)
+        {
             var segmentDirEntries = demo.SegmentDirectoryEntries;
             Assert.Equal(2, segmentDirEntries.Length);
 
@@ -40,189 +82,134 @@ namespace Sourceless.AcceptanceTest
             Assert.Equal(1317, segmentDirEntries[1].Frames);
             Assert.Equal(0x6204, segmentDirEntries[1].Offset);
             Assert.Equal(0x81BF6, segmentDirEntries[1].Length);
+        }
 
+        private static void AssertSegmentsAreReadCorrectly(GoldSourceDemo demo)
+        {
             Assert.Equal(2, demo.Segments.Count);
             Assert.Equal(0x60EC, demo.Segments[0].Length);
             Assert.Equal(0x81BF6, demo.Segments[1].Length);
+        }
 
-            var networkPacketCount = 0;
-            demo.OnNetworkPacketMessage += (sender, msg) =>
-            {
-                networkPacketCount++;
+        private static void AssertNetworkPacketMessagesAreReadCorrectly(
+            List<GoldSourceDemo.NetworkPacketEventArgs> networkPacketMessages)
+        {
+            Assert.Equal(1325, networkPacketMessages.Count);
 
-                if (networkPacketCount == 1)
-                {
-                    Assert.Equal(DemoMessage.NetworkPacket0, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, 0.309847, 0.309848);
-                    Assert.Equal(6, msg.Header.Frame);
-                    Assert.Equal(0, msg.Message.ViewAngleX);
-                    Assert.Equal(0, msg.Message.OriginX);
-                    Assert.Equal(0, msg.Message.ViewAngleY);
-                    Assert.Equal(0, msg.Message.OriginY);
-                    Assert.Equal(0, msg.Message.ViewAngleZ);
-                    Assert.Equal(0, msg.Message.OriginZ);
-                    Assert.Equal(175, msg.Message.Length);
-                    Assert.Equal(175, msg.Message.Data.Length);
-                    Assert.Equal(0x03, msg.Message.Data[0]);
-                    Assert.Equal(0x00, msg.Message.Data[1]);
-                    Assert.Equal(0x00, msg.Message.Data[2]);
-                    Assert.Equal(0x80, msg.Message.Data[3]);
-                }
-                else if (networkPacketCount == 2)
-                {
-                    Assert.Equal(DemoMessage.NetworkPacket0, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, 0.323738, 0.323739);
-                    Assert.Equal(7, msg.Header.Frame);
-                    Assert.Equal(0, msg.Message.ViewAngleX);
-                    Assert.Equal(0, msg.Message.OriginX);
-                    Assert.Equal(0, msg.Message.ViewAngleY);
-                    Assert.Equal(0, msg.Message.OriginY);
-                    Assert.Equal(0, msg.Message.ViewAngleZ);
-                    Assert.Equal(0, msg.Message.OriginZ);
-                    Assert.Equal(7046, msg.Message.Length);
-                    Assert.Equal(7046, msg.Message.Data.Length);
-                    Assert.Equal(0x04, msg.Message.Data[0]);
-                    Assert.Equal(0x00, msg.Message.Data[1]);
-                    Assert.Equal(0x00, msg.Message.Data[2]);
-                    Assert.Equal(0x80, msg.Message.Data[3]);
-                }
-                else if (networkPacketCount == 9) // Special packet with id = 1 (don't know exactly what it means yet)
-                {
-                    Assert.Equal(DemoMessage.NetworkPacket1, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, -0.000001350, -0.000001349);
-                    Assert.Equal(0, msg.Header.Frame);
-                    Assert.InRange(msg.Message.ViewAngleX, -31.81200, -31.81199);
-                    Assert.Equal(843.125, msg.Message.OriginX);
-                    Assert.InRange(msg.Message.ViewAngleY, 186.86781, 186.86782);
-                    Assert.Equal(-16, msg.Message.OriginY);
-                    Assert.Equal(0, msg.Message.ViewAngleZ);
-                    Assert.Equal(-29.5, msg.Message.OriginZ);
-                    Assert.Equal(704, msg.Message.Length);
-                    Assert.Equal(704, msg.Message.Data.Length);
-                    Assert.Equal(0xDB, msg.Message.Data[0]);
-                    Assert.Equal(0x16, msg.Message.Data[1]);
-                    Assert.Equal(0x00, msg.Message.Data[2]);
-                    Assert.Equal(0x80, msg.Message.Data[3]);
-                }
-            };
+            Assert.Equal(DemoMessage.NetworkPacket0, networkPacketMessages[0].Header.Type);
+            Assert.InRange(networkPacketMessages[0].Header.Time, 0.309847, 0.309848);
+            Assert.Equal(6, networkPacketMessages[0].Header.Frame);
+            Assert.Equal(0, networkPacketMessages[0].Message.ViewAngleX);
+            Assert.Equal(0, networkPacketMessages[0].Message.OriginX);
+            Assert.Equal(0, networkPacketMessages[0].Message.ViewAngleY);
+            Assert.Equal(0, networkPacketMessages[0].Message.OriginY);
+            Assert.Equal(0, networkPacketMessages[0].Message.ViewAngleZ);
+            Assert.Equal(0, networkPacketMessages[0].Message.OriginZ);
+            Assert.Equal(175, networkPacketMessages[0].Message.Length);
+            Assert.Equal(175, networkPacketMessages[0].Message.Data.Length);
+            Assert.Equal(0x03, networkPacketMessages[0].Message.Data[0]);
+            Assert.Equal(0x00, networkPacketMessages[0].Message.Data[1]);
+            Assert.Equal(0x00, networkPacketMessages[0].Message.Data[2]);
+            Assert.Equal(0x80, networkPacketMessages[0].Message.Data[3]);
 
-            var segmentEndCount = 0;
-            demo.OnSegmentEndMessage += (sender, msg) =>
-            {
-                segmentEndCount++;
+            // Special packet with id = 1 (don't know exactly what it means yet)
+            Assert.Equal(DemoMessage.NetworkPacket1, networkPacketMessages[8].Header.Type);
+            Assert.InRange(networkPacketMessages[8].Header.Time, -0.000001350, -0.000001349);
+            Assert.Equal(0, networkPacketMessages[8].Header.Frame);
+            Assert.InRange(networkPacketMessages[8].Message.ViewAngleX, -31.81200, -31.81199);
+            Assert.Equal(843.125, networkPacketMessages[8].Message.OriginX);
+            Assert.InRange(networkPacketMessages[8].Message.ViewAngleY, 186.86781, 186.86782);
+            Assert.Equal(-16, networkPacketMessages[8].Message.OriginY);
+            Assert.Equal(0, networkPacketMessages[8].Message.ViewAngleZ);
+            Assert.Equal(-29.5, networkPacketMessages[8].Message.OriginZ);
+            Assert.Equal(704, networkPacketMessages[8].Message.Length);
+            Assert.Equal(704, networkPacketMessages[8].Message.Data.Length);
+            Assert.Equal(0xDB, networkPacketMessages[8].Message.Data[0]);
+            Assert.Equal(0x16, networkPacketMessages[8].Message.Data[1]);
+            Assert.Equal(0x00, networkPacketMessages[8].Message.Data[2]);
+            Assert.Equal(0x80, networkPacketMessages[8].Message.Data[3]);
+        }
 
-                if (segmentEndCount == 1)
-                {
-                    Assert.Equal(DemoMessage.SegmentEnd, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, 81.791069, 81.791070);
-                    Assert.Equal(5854, msg.Header.Frame);
-                }
-            };
+        private static void AssertSegmentEndMessagesAreReadCorrectly(
+            List<GoldSourceDemo.SegmentEndEventArgs> segmentEndMessages)
+        {
+            Assert.Equal(2, segmentEndMessages.Count);
 
-            var syncTickCount = 0;
-            demo.OnSyncTickMessage += (sender, msg) =>
-            {
-                syncTickCount++;
+            Assert.Equal(DemoMessage.SegmentEnd, segmentEndMessages[0].Header.Type);
+            Assert.InRange(segmentEndMessages[0].Header.Time, 81.791069, 81.791070);
+            Assert.Equal(5854, segmentEndMessages[0].Header.Frame);
+        }
 
-                if (syncTickCount == 1)
-                {
-                    Assert.Equal(DemoMessage.SyncTick, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, -0.000001350, -0.000001349);
-                    Assert.Equal(0, msg.Header.Frame);
-                }
-            };
+        private static void AssertSyncTickMessagesAreReadCorrectly(
+            List<GoldSourceDemo.SyncTickEventArgs> syncTickMessages)
+        {
+            Assert.Equal(1, syncTickMessages.Count);
 
-            var clientDataCount = 0;
-            demo.OnClientDataMessage += (sender, msg) =>
-            {
-                clientDataCount++;
+            Assert.Equal(DemoMessage.SyncTick, syncTickMessages[0].Header.Type);
+            Assert.InRange(syncTickMessages[0].Header.Time, -0.000001350, -0.000001349);
+            Assert.Equal(0, syncTickMessages[0].Header.Frame);
+        }
 
-                if (clientDataCount == 1)
-                {
-                    Assert.Equal(DemoMessage.ClientData, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, -0.000001350, -0.000001349);
-                    Assert.Equal(0, msg.Header.Frame);
+        private static void AssertClientDataMessagesAreReadCorrectly(
+            List<GoldSourceDemo.ClientDataEventArgs> clientDataMessages)
+        {
+            Assert.Equal(1317, clientDataMessages.Count);
 
-                    Assert.Equal(843.125, msg.Message.Origin.X);
-                    Assert.Equal(-16, msg.Message.Origin.Y);
-                    Assert.Equal(-29.5, msg.Message.Origin.Z);
-                    Assert.Equal(28, msg.Message.ViewHeight);
-                    Assert.Equal(0, msg.Message.MaxSpeed);
-                    Assert.InRange(msg.Message.ViewAngles.X, 8.514001, 8.514002);
-                    Assert.InRange(msg.Message.ViewAngles.Y, 106.215820, 106.215821);
-                    Assert.Equal(0, msg.Message.ViewAngles.Z);
-                    Assert.Equal(0, msg.Message.PunchAngles.X);
-                    Assert.Equal(0, msg.Message.PunchAngles.Y);
-                    Assert.Equal(0, msg.Message.PunchAngles.Z);
-                    Assert.Equal(0, msg.Message.KeyBits);
-                    Assert.Equal(-2147483626, msg.Message.WeaponBits);
-                    Assert.Equal(90, msg.Message.Fov);
-                }
-            };
+            Assert.Equal(DemoMessage.ClientData, clientDataMessages[0].Header.Type);
+            Assert.InRange(clientDataMessages[0].Header.Time, -0.000001350, -0.000001349);
+            Assert.Equal(0, clientDataMessages[0].Header.Frame);
+            Assert.Equal(843.125, clientDataMessages[0].Message.Origin.X);
+            Assert.Equal(-16, clientDataMessages[0].Message.Origin.Y);
+            Assert.Equal(-29.5, clientDataMessages[0].Message.Origin.Z);
+            Assert.Equal(28, clientDataMessages[0].Message.ViewHeight);
+            Assert.Equal(0, clientDataMessages[0].Message.MaxSpeed);
+            Assert.InRange(clientDataMessages[0].Message.ViewAngles.X, 8.514001, 8.514002);
+            Assert.InRange(clientDataMessages[0].Message.ViewAngles.Y, 106.215820, 106.215821);
+            Assert.Equal(0, clientDataMessages[0].Message.ViewAngles.Z);
+            Assert.Equal(0, clientDataMessages[0].Message.PunchAngles.X);
+            Assert.Equal(0, clientDataMessages[0].Message.PunchAngles.Y);
+            Assert.Equal(0, clientDataMessages[0].Message.PunchAngles.Z);
+            Assert.Equal(0, clientDataMessages[0].Message.KeyBits);
+            Assert.Equal(-2147483626, clientDataMessages[0].Message.WeaponBits);
+            Assert.Equal(90, clientDataMessages[0].Message.Fov);
+        }
 
-            var sequenceInfoCount = 0;
-            demo.OnSequenceInfoMessage += (sender, msg) =>
-            {
-                sequenceInfoCount++;
+        private static void AssertSequenceInfoMessagesAreReadCorrectly(
+            List<GoldSourceDemo.SequenceInfoEventArgs> sequenceInfoMessages)
+        {
+            Assert.Equal(1317, sequenceInfoMessages.Count);
 
-                if (sequenceInfoCount == 1)
-                {
-                    Assert.Equal(DemoMessage.SequenceInfo, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, -0.000001350, -0.000001349);
-                    Assert.Equal(0, msg.Header.Frame);
+            Assert.Equal(DemoMessage.SequenceInfo, sequenceInfoMessages[0].Header.Type);
+            Assert.InRange(sequenceInfoMessages[0].Header.Time, -0.000001350, -0.000001349);
+            Assert.Equal(0, sequenceInfoMessages[0].Header.Frame);
+            Assert.Equal(5851, sequenceInfoMessages[0].Message.IncomingSequence);
+            Assert.Equal(5851, sequenceInfoMessages[0].Message.IncomingAcknowledged);
+            Assert.Equal(0, sequenceInfoMessages[0].Message.IncomingReliableAcknowledged);
+            Assert.Equal(1, sequenceInfoMessages[0].Message.IncomingReliableSequence);
+            Assert.Equal(5852, sequenceInfoMessages[0].Message.OutgoingSequence);
+            Assert.Equal(0, sequenceInfoMessages[0].Message.ReliableSequence);
+            Assert.Equal(5324, sequenceInfoMessages[0].Message.LastReliableSequence);
+        }
 
-                    Assert.Equal(5851, msg.Message.IncomingSequence);
-                    Assert.Equal(5851, msg.Message.IncomingAcknowledged);
-                    Assert.Equal(0, msg.Message.IncomingReliableAcknowledged);
-                    Assert.Equal(1, msg.Message.IncomingReliableSequence);
-                    Assert.Equal(5852, msg.Message.OutgoingSequence);
-                    Assert.Equal(0, msg.Message.ReliableSequence);
-                    Assert.Equal(5324, msg.Message.LastReliableSequence);
-                }
-            };
+        private static void AssertFrameCompleteMessagesAreReadCorrectly(
+            List<GoldSourceDemo.FrameCompleteEventArgs> frameCompleteMessages)
+        {
+            Assert.Equal(1317, frameCompleteMessages.Count);
 
-            var frameCompleteCount = 0;
-            demo.OnFrameCompleteMessage += (sender, msg) =>
-            {
-                frameCompleteCount++;
+            Assert.Equal(DemoMessage.FrameComplete, frameCompleteMessages[0].Header.Type);
+            Assert.InRange(frameCompleteMessages[0].Header.Time, -0.000001350, -0.000001349);
+            Assert.Equal(0, frameCompleteMessages[0].Header.Frame);
+        }
 
-                if (frameCompleteCount == 1)
-                {
-                    Assert.Equal(DemoMessage.FrameComplete, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, -0.000001350, -0.000001349);
-                    Assert.Equal(0, msg.Header.Frame);
-                }
-            };
+        private static void AssertClientCommandMessagesAreReadCorrectly(
+            List<GoldSourceDemo.ClientCommandEventArgs> clientCommandMessages)
+        {
+            Assert.Equal(2, clientCommandMessages.Count);
 
-            var clientCommandCount = 0;
-            demo.OnClientCommandMessage += (sender, msg) =>
-            {
-                clientCommandCount++;
-
-                if (clientCommandCount == 1)
-                {
-                    Assert.Equal(DemoMessage.ClientCommand, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, 6.690042, 6.690043);
-                    Assert.Equal(1, msg.Header.Frame);
-                    Assert.Equal("-showscores", msg.Message.Command);
-                }
-                if (clientCommandCount == 2)
-                {
-                    Assert.Equal(DemoMessage.ClientCommand, msg.Header.Type);
-                    Assert.InRange(msg.Header.Time, 7.758872, 7.758873);
-                    Assert.Equal(49, msg.Header.Frame);
-                    Assert.Equal("-showscores", msg.Message.Command);
-                }
-            };
-
-            demo.Read();
-            Assert.Equal(1325, networkPacketCount);
-            Assert.Equal(2, segmentEndCount);
-            Assert.Equal(1, syncTickCount);
-            Assert.Equal(1317, clientDataCount);
-            Assert.Equal(1317, sequenceInfoCount);
-            Assert.Equal(1317, frameCompleteCount);
-            Assert.Equal(2, clientCommandCount);
+            Assert.Equal(DemoMessage.ClientCommand, clientCommandMessages[0].Header.Type);
+            Assert.InRange(clientCommandMessages[0].Header.Time, 6.690042, 6.690043);
+            Assert.Equal(1, clientCommandMessages[0].Header.Frame);
+            Assert.Equal("-showscores", clientCommandMessages[0].Message.Command);
         }
     }
 }
