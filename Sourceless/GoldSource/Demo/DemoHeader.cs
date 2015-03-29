@@ -1,5 +1,4 @@
-﻿using System.IO;
-using BinarySerialization;
+﻿using BinarySerialization;
 
 namespace Sourceless.GoldSource.Demo
 {
