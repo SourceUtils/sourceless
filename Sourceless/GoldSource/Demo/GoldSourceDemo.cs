@@ -34,6 +34,8 @@ namespace Sourceless.GoldSource.Demo
             var segmentDir = serializer.Deserialize<SegmentDirectory>(demoStream);
 
             var segments = segmentDir.Entries.Select(dir => ReadSegment(dir.Offset, dir.Length, demoStream)).ToList();
+
+            demoStream.Close();
             return new GoldSourceDemo(demoHeader, segmentDir.Entries, segments);
         }
 
