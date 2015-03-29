@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Sourceless.GoldSource.Demo.Message;
@@ -7,22 +8,6 @@ namespace Sourceless.GoldSource.Demo
 {
     public class GoldSourceDemo
     {
-        public delegate void ClientCommandMessageHandler(object sender, DemoMessageEventArgs<ClientCommandDemoMessage> e
-            );
-
-        public delegate void ClientDataMessageHandler(object sender, DemoMessageEventArgs<ClientDataDemoMessage> e);
-
-        public delegate void FrameCompleteMessageHandler(object sender, EmptyDemoMessageEventArgs e);
-
-        public delegate void NetworkPacketMessageHandler(object sender, DemoMessageEventArgs<NetworkPacketDemoMessage> e
-            );
-
-        public delegate void SegmentEndMessageHandler(object sender, EmptyDemoMessageEventArgs e);
-
-        public delegate void SequenceInfoMessageHandler(object sender, DemoMessageEventArgs<SequenceInfoDemoMessage> e);
-
-        public delegate void SyncTickMessageHandler(object sender, EmptyDemoMessageEventArgs e);
-
         public GoldSourceDemo(DemoHeader header, SegmentDirectoryEntry[] segmentDirEntries, List<byte[]> segments)
         {
             Header = header;
@@ -33,13 +18,13 @@ namespace Sourceless.GoldSource.Demo
         public DemoHeader Header { get; private set; }
         public SegmentDirectoryEntry[] SegmentDirectoryEntries { get; set; }
         public List<byte[]> Segments { get; private set; }
-        public event NetworkPacketMessageHandler OnNetworkPacketMessage;
-        public event SyncTickMessageHandler OnSyncTickMessage;
-        public event SequenceInfoMessageHandler OnSequenceInfoMessage;
-        public event FrameCompleteMessageHandler OnFrameCompleteMessage;
-        public event ClientCommandMessageHandler OnClientCommandMessage;
-        public event ClientDataMessageHandler OnClientDataMessage;
-        public event SegmentEndMessageHandler OnSegmentEndMessage;
+        public event EventHandler<DemoMessageEventArgs<NetworkPacketDemoMessage>> OnNetworkPacketMessage;
+        public event EventHandler<EmptyDemoMessageEventArgs> OnSyncTickMessage;
+        public event EventHandler<DemoMessageEventArgs<SequenceInfoDemoMessage>> OnSequenceInfoMessage;
+        public event EventHandler<EmptyDemoMessageEventArgs> OnFrameCompleteMessage;
+        public event EventHandler<DemoMessageEventArgs<ClientCommandDemoMessage>> OnClientCommandMessage;
+        public event EventHandler<DemoMessageEventArgs<ClientDataDemoMessage>> OnClientDataMessage;
+        public event EventHandler<EmptyDemoMessageEventArgs> OnSegmentEndMessage;
 
         public static GoldSourceDemo FromFile(string filePath)
         {
