@@ -8,22 +8,22 @@ namespace Sourceless.GoldSource.Demo.Message
     public class NetworkPacketDemoMessage : BinaryEntity<NetworkPacketDemoMessage>
     {
         [FieldOrder(0)]
-        public float Unk1 { get; private set; }
+        public float ViewAngleX { get; private set; }
 
         [FieldOrder(1)]
-        public float Unk2 { get; private set; }
+        public float OriginX { get; private set; }
 
         [FieldOrder(2)]
-        public float Unk3 { get; private set; }
+        public float ViewAngleY { get; private set; }
 
         [FieldOrder(3)]
-        public float Unk4 { get; private set; }
+        public float OriginY { get; private set; }
 
         [FieldOrder(4)]
-        public float Unk5 { get; private set; }
+        public float ViewAngleZ { get; private set; }
 
         [FieldOrder(5)]
-        public float Unk6 { get; private set; }
+        public float OriginZ { get; private set; }
 
         [FieldOrder(6)]
         public int Length { get; private set; }
