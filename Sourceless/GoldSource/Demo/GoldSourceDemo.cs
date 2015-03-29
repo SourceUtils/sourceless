@@ -60,7 +60,8 @@ namespace Sourceless.GoldSource.Demo
                 var messageHeader = DemoMessageHeader.Read(curSegment);
                 switch (messageHeader.Type)
                 {
-                    case DemoMessage.NetworkPacket:
+                    case DemoMessage.NetworkPacket0:
+                    case DemoMessage.NetworkPacket1:
                         ProcessNetworkPacketMessage(curSegment, messageHeader);
                         break;
                     case DemoMessage.SyncTick:

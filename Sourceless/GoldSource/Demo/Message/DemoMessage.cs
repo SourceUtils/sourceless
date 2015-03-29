@@ -2,7 +2,8 @@
 {
     public enum DemoMessage : byte
     {
-        NetworkPacket = 0,
+        NetworkPacket0 = 0,
+        NetworkPacket1 = 1,
         SyncTick = 2,
         SequenceInfo = 3,
         ClientData = 6,

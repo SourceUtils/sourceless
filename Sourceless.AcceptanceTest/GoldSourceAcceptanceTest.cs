@@ -53,7 +53,7 @@ namespace Sourceless.AcceptanceTest
 
                 if (networkPacketCount == 1)
                 {
-                    Assert.Equal(DemoMessage.NetworkPacket, msg.Header.Type);
+                    Assert.Equal(DemoMessage.NetworkPacket0, msg.Header.Type);
                     Assert.InRange(msg.Header.Time, 0.360358, 0.360359);
                     Assert.Equal(7, msg.Header.Frame);
                     Assert.Equal(0, msg.Message.Unk1);
@@ -71,7 +71,7 @@ namespace Sourceless.AcceptanceTest
                 }
                 else if (networkPacketCount == 2)
                 {
-                    Assert.Equal(DemoMessage.NetworkPacket, msg.Header.Type);
+                    Assert.Equal(DemoMessage.NetworkPacket0, msg.Header.Type);
                     Assert.InRange(msg.Header.Time, 0.374247, 0.374248);
                     Assert.Equal(8, msg.Header.Frame);
                     Assert.Equal(0, msg.Message.Unk1);
@@ -84,6 +84,24 @@ namespace Sourceless.AcceptanceTest
                     Assert.Equal(7046, msg.Message.Data.Length);
                     Assert.Equal(0x04, msg.Message.Data[0]);
                     Assert.Equal(0x00, msg.Message.Data[1]);
+                    Assert.Equal(0x00, msg.Message.Data[2]);
+                    Assert.Equal(0x80, msg.Message.Data[3]);
+                }
+                else if (networkPacketCount == 9) // Special packet with id = 1 (don't know exactly what it means yet)
+                {
+                    Assert.Equal(DemoMessage.NetworkPacket1, msg.Header.Type);
+                    Assert.InRange(msg.Header.Time, -0.000000282, -0.000000281);
+                    Assert.Equal(0, msg.Header.Frame);
+                    Assert.InRange(msg.Message.Unk1, -13.13123, -13.13122);
+                    Assert.Equal(1777.375, msg.Message.Unk2);
+                    Assert.InRange(msg.Message.Unk3, 154.8907, 154.8908);
+                    Assert.Equal(428.25, msg.Message.Unk4);
+                    Assert.Equal(0, msg.Message.Unk5);
+                    Assert.Equal(36, msg.Message.Unk6);
+                    Assert.Equal(547, msg.Message.Length);
+                    Assert.Equal(547, msg.Message.Data.Length);
+                    Assert.Equal(0x7A, msg.Message.Data[0]);
+                    Assert.Equal(0x03, msg.Message.Data[1]);
                     Assert.Equal(0x00, msg.Message.Data[2]);
                     Assert.Equal(0x80, msg.Message.Data[3]);
                 }
@@ -165,7 +183,7 @@ namespace Sourceless.AcceptanceTest
             };
 
             demo.Read();
-            Assert.True(networkPacketCount >= 2);
+            Assert.True(networkPacketCount >= 9);
             Assert.True(segmentEndCount >= 1);
             Assert.True(syncTickCount >= 1);
             Assert.True(clientDataCount >= 1);
