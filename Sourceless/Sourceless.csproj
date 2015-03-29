@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GoldSource\BinaryEntity.cs" />
     <Compile Include="GoldSource\Demo\DemoHeader.cs" />
     <Compile Include="GoldSource\Demo\Message\DemoMessageHeader.cs" />
     <Compile Include="GoldSource\Demo\Message\DemoMessage.cs" />

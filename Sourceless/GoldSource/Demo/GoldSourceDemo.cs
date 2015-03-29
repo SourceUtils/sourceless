@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using BinarySerialization;
 using Sourceless.GoldSource.Demo.Message;
 
 namespace Sourceless.GoldSource.Demo
@@ -25,14 +24,11 @@ namespace Sourceless.GoldSource.Demo
 
         public static GoldSourceDemo FromFile(string filePath)
         {
-            var serializer = new BinarySerializer();
             var demoStream = new FileStream(filePath, FileMode.Open);
 
-            var demoHeader = serializer.Deserialize<DemoHeader>(demoStream);
-
+            var demoHeader = DemoHeader.Read(demoStream);
             demoStream.Seek(demoHeader.SegmentDirectoryOffset, SeekOrigin.Begin);
-            var segmentDir = serializer.Deserialize<SegmentDirectory>(demoStream);
-
+            var segmentDir = SegmentDirectory.Read(demoStream);
             var segments = segmentDir.Entries.Select(dir => ReadSegment(dir.Offset, dir.Length, demoStream)).ToList();
 
             demoStream.Close();
@@ -50,15 +46,13 @@ namespace Sourceless.GoldSource.Demo
         public void Read()
         {
             var segmentStream = new MemoryStream(Segments[0]);
-            var serializer = new BinarySerializer();
 
             while (true)
             {
-                var messageHeader = serializer.Deserialize<DemoMessageHeader>(segmentStream);
-
+                var messageHeader = DemoMessageHeader.Read(segmentStream);
                 if (messageHeader.Type == DemoMessage.NetworkPacket)
                 {
-                    var demoMessage = serializer.Deserialize<NetworkPacketDemoMessage>(segmentStream);
+                    var demoMessage = NetworkPacketDemoMessage.Read(segmentStream);
 
                     var eventArgs = new NetworkPacketEventArgs
                     {

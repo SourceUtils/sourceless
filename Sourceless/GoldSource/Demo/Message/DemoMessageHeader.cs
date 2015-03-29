@@ -2,7 +2,7 @@
 
 namespace Sourceless.GoldSource.Demo.Message
 {
-    public class DemoMessageHeader
+    public class DemoMessageHeader : BinaryEntity<DemoMessageHeader>
     {
         [FieldOrder(0)]
         public DemoMessage Type { get; private set; }

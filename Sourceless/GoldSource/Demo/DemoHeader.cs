@@ -1,8 +1,9 @@
-﻿using BinarySerialization;
+﻿using System.IO;
+using BinarySerialization;
 
 namespace Sourceless.GoldSource.Demo
 {
-    public class DemoHeader
+    public class DemoHeader : BinaryEntity<DemoHeader>
     {
         [FieldOrder(0)]
         [FieldLength(8)]

@@ -2,7 +2,7 @@ using BinarySerialization;
 
 namespace Sourceless.GoldSource.Demo
 {
-    public class SegmentDirectory
+    public class SegmentDirectory : BinaryEntity<SegmentDirectory>
     {
         [FieldOrder(0)]
         public int SegmentCount { get; private set; }
