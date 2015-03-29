@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Sourceless.GoldSource.Demo.Message;
@@ -8,13 +7,21 @@ namespace Sourceless.GoldSource.Demo
 {
     public class GoldSourceDemo
     {
-        public delegate void NetworkPacketMessageHandler(object sender, NetworkPacketEventArgs e);
-        public delegate void SyncTickMessageHandler(object sender, SyncTickEventArgs e);
-        public delegate void SequenceInfoMessageHandler(object sender, SequenceInfoEventArgs e);
-        public delegate void FrameCompleteMessageHandler(object sender, FrameCompleteEventArgs e);
-        public delegate void ClientCommandMessageHandler(object sender, ClientCommandEventArgs e);
-        public delegate void ClientDataMessageHandler(object sender, ClientDataEventArgs e);
-        public delegate void SegmentEndMessageHandler(object sender, SegmentEndEventArgs e);
+        public delegate void ClientCommandMessageHandler(object sender, DemoMessageEventArgs<ClientCommandDemoMessage> e
+            );
+
+        public delegate void ClientDataMessageHandler(object sender, DemoMessageEventArgs<ClientDataDemoMessage> e);
+
+        public delegate void FrameCompleteMessageHandler(object sender, EmptyDemoMessageEventArgs e);
+
+        public delegate void NetworkPacketMessageHandler(object sender, DemoMessageEventArgs<NetworkPacketDemoMessage> e
+            );
+
+        public delegate void SegmentEndMessageHandler(object sender, EmptyDemoMessageEventArgs e);
+
+        public delegate void SequenceInfoMessageHandler(object sender, DemoMessageEventArgs<SequenceInfoDemoMessage> e);
+
+        public delegate void SyncTickMessageHandler(object sender, EmptyDemoMessageEventArgs e);
 
         public GoldSourceDemo(DemoHeader header, SegmentDirectoryEntry[] segmentDirEntries, List<byte[]> segments)
         {
@@ -102,17 +109,17 @@ namespace Sourceless.GoldSource.Demo
         private void ProcessNetworkPacketMessage(Stream segmentStream, DemoMessageHeader messageHeader)
         {
             var demoMessage = NetworkPacketDemoMessage.Read(segmentStream);
-            var args = new NetworkPacketEventArgs
+            var args = new DemoMessageEventArgs<NetworkPacketDemoMessage>
             {
                 Header = messageHeader,
-                Message = demoMessage
+                Body = demoMessage
             };
             OnNetworkPacketMessage.Invoke(this, args);
         }
 
         private void ProcessSyncTickMessage(DemoMessageHeader messageHeader)
         {
-            var args = new SyncTickEventArgs
+            var args = new EmptyDemoMessageEventArgs
             {
                 Header = messageHeader
             };
@@ -122,17 +129,17 @@ namespace Sourceless.GoldSource.Demo
         private void ProcessSequenceInfoMessage(Stream segmentStream, DemoMessageHeader messageHeader)
         {
             var demoMessage = SequenceInfoDemoMessage.Read(segmentStream);
-            var args = new SequenceInfoEventArgs
+            var args = new DemoMessageEventArgs<SequenceInfoDemoMessage>
             {
                 Header = messageHeader,
-                Message = demoMessage
+                Body = demoMessage
             };
             OnSequenceInfoMessage.Invoke(this, args);
         }
 
         private void ProcessFrameCompleteMessage(DemoMessageHeader messageHeader)
         {
-            var args = new FrameCompleteEventArgs
+            var args = new EmptyDemoMessageEventArgs
             {
                 Header = messageHeader
             };
@@ -142,70 +149,32 @@ namespace Sourceless.GoldSource.Demo
         private void ProcessClientCommandMessage(Stream segmentStream, DemoMessageHeader messageHeader)
         {
             var demoMessage = ClientCommandDemoMessage.Read(segmentStream);
-            var args = new ClientCommandEventArgs
+            var args = new DemoMessageEventArgs<ClientCommandDemoMessage>
             {
-                Message = demoMessage,
-                Header = messageHeader
+                Header = messageHeader,
+                Body = demoMessage
             };
             OnClientCommandMessage.Invoke(this, args);
         }
-        
+
         private void ProcessClientDataMessage(Stream segmentStream, DemoMessageHeader messageHeader)
         {
             var demoMessage = ClientDataDemoMessage.Read(segmentStream);
-            var args = new ClientDataEventArgs
+            var args = new DemoMessageEventArgs<ClientDataDemoMessage>
             {
                 Header = messageHeader,
-                Message = demoMessage
+                Body = demoMessage
             };
             OnClientDataMessage.Invoke(this, args);
         }
 
         private void ProcessSegmentEndMessage(DemoMessageHeader messageHeader)
         {
-            var args = new SegmentEndEventArgs
+            var args = new EmptyDemoMessageEventArgs
             {
                 Header = messageHeader
             };
             OnSegmentEndMessage.Invoke(this, args);
-        }
-
-        public class NetworkPacketEventArgs : EventArgs
-        {
-            public DemoMessageHeader Header { get; set; }
-            public NetworkPacketDemoMessage Message { get; set; }
-        }
-
-        public class SyncTickEventArgs : EventArgs
-        {
-            public DemoMessageHeader Header { get; set; }
-        }
-        
-        public class SequenceInfoEventArgs : EventArgs
-        {
-            public DemoMessageHeader Header { get; set; }
-            public SequenceInfoDemoMessage Message { get; set; }
-        }
-        
-        public class FrameCompleteEventArgs : EventArgs
-        {
-            public DemoMessageHeader Header { get; set; }
-        } 
-        public class ClientCommandEventArgs : EventArgs
-        {
-            public DemoMessageHeader Header { get; set; }
-            public ClientCommandDemoMessage Message { get; set; }
-        } 
-        
-        public class ClientDataEventArgs : EventArgs
-        {
-            public DemoMessageHeader Header { get; set; }
-            public ClientDataDemoMessage Message { get; set; }
-        }
-
-        public class SegmentEndEventArgs : EventArgs
-        {
-            public DemoMessageHeader Header { get; set; }
         }
     }
 }

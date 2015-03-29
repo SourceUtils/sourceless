@@ -46,6 +46,8 @@
     <Compile Include="Common\Vector.cs" />
     <Compile Include="GoldSource\BinaryEntity.cs" />
     <Compile Include="GoldSource\Demo\DemoHeader.cs" />
+    <Compile Include="GoldSource\Demo\DemoMessageEventArgs.cs" />
+    <Compile Include="GoldSource\Demo\EmptyDemoMessageEventArgs.cs" />
     <Compile Include="GoldSource\Demo\Message\ClientCommandDemoMessage.cs" />
     <Compile Include="GoldSource\Demo\Message\SequenceInfoDemoMessage.cs" />
     <Compile Include="GoldSource\Demo\Message\DemoMessageHeader.cs" />
