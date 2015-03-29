@@ -10,6 +10,7 @@ namespace Sourceless.GoldSource.Demo
     {
         public delegate void NetworkPacketMessageHandler(object sender, NetworkPacketEventArgs e);
         public delegate void SyncTickMessageHandler(object sender, SyncTickEventArgs e);
+        public delegate void SequenceInfoMessageHandler(object sender, SequenceInfoEventArgs e);
         public delegate void ClientDataMessageHandler(object sender, ClientDataEventArgs e);
         public delegate void SegmentEndMessageHandler(object sender, SegmentEndEventArgs e);
 
@@ -25,6 +26,7 @@ namespace Sourceless.GoldSource.Demo
         public List<byte[]> Segments { get; private set; }
         public event NetworkPacketMessageHandler OnNetworkPacketMessage;
         public event SyncTickMessageHandler OnSyncTickMessage;
+        public event SequenceInfoMessageHandler OnSequenceInfoMessage;
         public event ClientDataMessageHandler OnClientDataMessage;
         public event SegmentEndMessageHandler OnSegmentEndMessage;
 
@@ -64,6 +66,9 @@ namespace Sourceless.GoldSource.Demo
                     case DemoMessage.SyncTick:
                         ProcessSyncTickMessage(messageHeader);
                         break;
+                    case DemoMessage.SequenceInfo:
+                        ProcessSequenceInfoMessage(curSegment, messageHeader);
+                        break;
                     case DemoMessage.ClientData:
                         ProcessClientDataMessage(curSegment, messageHeader);
                         break;
@@ -102,6 +107,17 @@ namespace Sourceless.GoldSource.Demo
             };
             OnSyncTickMessage.Invoke(this, args);
         }
+
+        private void ProcessSequenceInfoMessage(Stream segmentStream, DemoMessageHeader messageHeader)
+        {
+            var demoMessage = SequenceInfoDemoMessage.Read(segmentStream);
+            var args = new SequenceInfoEventArgs
+            {
+                Header = messageHeader,
+                Message = demoMessage
+            };
+            OnSequenceInfoMessage.Invoke(this, args);
+        }
         
         private void ProcessClientDataMessage(Stream segmentStream, DemoMessageHeader messageHeader)
         {
@@ -132,6 +148,12 @@ namespace Sourceless.GoldSource.Demo
         public class SyncTickEventArgs : EventArgs
         {
             public DemoMessageHeader Header { get; set; }
+        }
+        
+        public class SequenceInfoEventArgs : EventArgs
+        {
+            public DemoMessageHeader Header { get; set; }
+            public SequenceInfoDemoMessage Message { get; set; }
         } 
         
         public class ClientDataEventArgs : EventArgs

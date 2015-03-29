@@ -4,6 +4,7 @@
     {
         NetworkPacket = 0,
         SyncTick = 2,
+        SequenceInfo = 3,
         ClientData = 6,
         SegmentEnd = 8
     }
