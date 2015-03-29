@@ -45,12 +45,12 @@ namespace Sourceless.AcceptanceTest
             Assert.Equal(0x60EC, demo.Segments[0].Length);
             Assert.Equal(0x47E03, demo.Segments[1].Length);
 
-            var callCount = 0;
+            var networkPacketCount = 0;
             demo.OnNetworkPacketMessage += (sender, msg) =>
             {
-                callCount++;
+                networkPacketCount++;
 
-                if (callCount == 1)
+                if (networkPacketCount == 1)
                 {
                     Assert.Equal(DemoMessage.NetworkPacket, msg.Header.Type);
                     Assert.InRange(msg.Header.Time, 0.360358, 0.360359);
@@ -68,7 +68,7 @@ namespace Sourceless.AcceptanceTest
                     Assert.Equal(0x00, msg.Message.Data[2]);
                     Assert.Equal(0x80, msg.Message.Data[3]);
                 }
-                else if (callCount == 2)
+                else if (networkPacketCount == 2)
                 {
                     Assert.Equal(DemoMessage.NetworkPacket, msg.Header.Type);
                     Assert.InRange(msg.Header.Time, 0.374247, 0.374248);
@@ -87,8 +87,23 @@ namespace Sourceless.AcceptanceTest
                     Assert.Equal(0x80, msg.Message.Data[3]);
                 }
             };
+
+            var segmentEndCount = 0;
+            demo.OnSegmentEndMessage += (sender, msg) =>
+            {
+                segmentEndCount++;
+
+                if (segmentEndCount == 1)
+                {
+                    Assert.Equal(DemoMessage.SegmentEnd, msg.Header.Type);
+                    Assert.InRange(msg.Header.Time, 12.879183, 12.879184);
+                    Assert.Equal(894, msg.Header.Frame);
+                }
+            };
+
             demo.Read();
-            Assert.True(callCount >= 2);
+            Assert.True(networkPacketCount >= 2);
+            Assert.True(segmentEndCount >= 1);
         }
     }
 }

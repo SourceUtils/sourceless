@@ -2,6 +2,7 @@
 {
     public enum DemoMessage : byte
     {
-        NetworkPacket = 0
+        NetworkPacket = 0,
+        SegmentEnd = 8
     }
 }
